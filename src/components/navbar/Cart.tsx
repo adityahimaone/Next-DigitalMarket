@@ -9,10 +9,13 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { ShoppingCart } from "lucide-react";
+import { Separator } from "../ui/separator";
+import { formatPrice } from "@/lib/utils";
 
 type Props = {};
 
 function Cart({}: Props) {
+  const itemCount = 1;
   return (
     <Sheet>
       <SheetTrigger className="group -m-2 flex items-center p-2">
@@ -28,6 +31,29 @@ function Cart({}: Props) {
         <SheetHeader className="space-y-2.5 pr-6">
           <SheetTitle>Cart (0)</SheetTitle>
         </SheetHeader>
+        {itemCount > 0 ? (
+          <>
+            <div className="flex w-full flex-col pr-6">
+              {/* TODO: cart logic */}
+              cart items
+            </div>
+            <div className="space-y-4 pr-6">
+              <Separator />
+              <div className="space-y-1 5 text-sm">
+                <div className="flex">
+                  <span className="flex-1">Shipping</span>
+                  <span>Free</span>
+                </div>
+                <div className="flex">
+                  <span className="flex-1">Transaction Fee</span>
+                  <span>{formatPrice(1)}</span>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className=""></div>
+        )}
       </SheetContent>
     </Sheet>
   );

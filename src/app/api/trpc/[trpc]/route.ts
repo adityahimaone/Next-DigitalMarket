@@ -7,6 +7,7 @@ const handler = (req: Request) => {
     req,
     // appRouter is a TRPC router that contains all the procedures (BACKEND)
     router: appRouter,
+    // @ts-expect-error context already passed from express middleware
     createContext: () => ({}),
   });
 };

@@ -39,6 +39,7 @@
     "react-hook-form": "^7.48.2",
     "sonner": "^1.2.4",
     "sooner": "^1.1.4",
+    "swiper": "^11.0.5",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.1",

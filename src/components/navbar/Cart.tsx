@@ -56,7 +56,7 @@ function Cart({}: Props) {
         {itemCount > 0 ? (
           <>
             <div className="flex w-full flex-col pr-6">
-              <ScrollArea>
+              <ScrollArea className="max-h-[65vh]">
                 {items.map(({ product }) => (
                   <CartItem key={product.id} product={product} />
                 ))}

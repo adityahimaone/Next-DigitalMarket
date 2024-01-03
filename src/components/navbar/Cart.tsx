@@ -43,7 +43,7 @@ function Cart({}: Props) {
       <SheetTrigger className="group -m-2 flex items-center p-2">
         <ShoppingCart
           aria-hidden="true"
-          className="w-6 h-6 flex-shrink-0 text-gray-500 group-hover:text-gray-500"
+          className="h-6 w-6 shrink-0 text-gray-500 group-hover:text-gray-500"
         />
         <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
           {isMounted ? itemCount : "0"}
@@ -57,14 +57,14 @@ function Cart({}: Props) {
           <>
             <div className="flex w-full flex-col pr-6">
               <ScrollArea className="max-h-[65vh]">
-                {items.map(({ product }) => (
-                  <CartItem key={product.id} product={product} />
+                {items.map(({ product }, idx) => (
+                  <CartItem key={`${product.id}-${idx}`} product={product} />
                 ))}
               </ScrollArea>
             </div>
             <div className="space-y-4 pr-6">
               <Separator />
-              <div className="space-y-1 5 text-sm">
+              <div className="space-y-1 text-sm">
                 <div className="flex">
                   <span className="flex-1">Shipping</span>
                   <span>Free</span>

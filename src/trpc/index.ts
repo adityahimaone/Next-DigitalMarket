@@ -4,11 +4,14 @@ import { publicProcedure, router } from "./trpc";
 import { QueryValidator } from "../lib/validators/query-validator";
 import { getPayload } from "payload";
 import { getPayloadClient } from "../get-payload";
+import { paymentRouter } from "./payment-router";
 
 // router is a TRPC router that contains all the procedures
 // anyApiRoute is a procedure that can be called by anyone (Public)
 export const appRouter = router({
   auth: authRouter,
+  payment: paymentRouter,
+
   getInfiniteProducts: publicProcedure
     .input(
       z.object({

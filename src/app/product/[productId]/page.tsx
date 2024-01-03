@@ -63,7 +63,7 @@ const page = async ({ params }: Props) => {
   return (
     <MaxWidthWrapper className="bg-white">
       <div className="bg-white">
-        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
+        <div className="sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8 max-w-2xl px-4 py-16 mx-auto">
           {/* Product Details */}
           <div className="lg:max-w-lg lg:self-end">
             <ol className="flex items-center space-x-2">
@@ -72,7 +72,7 @@ const page = async ({ params }: Props) => {
                   <div className="flex items-center text-sm">
                     <Link
                       href={item.href}
-                      className="font-medium text-sm text-muted-foreground hover:text-gray-600"
+                      className="text-muted-foreground hover:text-gray-600 text-sm font-medium"
                     >
                       {item.name}
                     </Link>
@@ -81,7 +81,7 @@ const page = async ({ params }: Props) => {
                         viewBox="0 0 20 20"
                         fill="currentColor"
                         aria-hidden="true"
-                        className="ml-2 h-5 w-5 flex-shrink-0 text-gray-300"
+                        className="flex-shrink-0 w-5 h-5 ml-2 text-gray-300"
                       >
                         <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
                       </svg>
@@ -91,7 +91,7 @@ const page = async ({ params }: Props) => {
               ))}
             </ol>
             <div className="mt-4">
-              <h1 className="text-3xl font-bold tracking-light text-gray-900 sm:text-4xl">
+              <h1 className="tracking-light sm:text-4xl text-3xl font-bold text-gray-900">
                 {product.name}
               </h1>
             </div>
@@ -100,35 +100,35 @@ const page = async ({ params }: Props) => {
                 <p className="font-medium text-gray-900">
                   {formatPrice(product.price)}
                 </p>
-                <div className="ml-4 border-l text-muted-foreground border-gray-400 pl-4">
+                <div className="text-muted-foreground pl-4 ml-4 border-l border-gray-400">
                   {label}
                 </div>
               </div>
               <div className="mt-4 space-y-6">
-                <p className="text-base text-muted-foreground">
+                <p className="text-muted-foreground text-base">
                   {product.description}
                 </p>
               </div>
-              <div className="mt-4 flex items-center">
+              <div className="flex items-center mt-4">
                 <Check
                   aria-hidden="true"
-                  className="h-5 w-5 flex-shrink-0 text-green-500"
+                  className="flex-shrink-0 w-5 h-5 text-green-500"
                 />
-                <p className="ml-2 text-sm text-muted-foreground">
+                <p className="text-muted-foreground ml-2 text-sm">
                   Eligible for instant delivery
                 </p>
               </div>
             </section>
           </div>
           {/* Product Images */}
-          <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
+          <div className="lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center mt-10">
             <div className="aspect-square rounded-lg">
               <ImageSlider urls={validUrls} />
             </div>
           </div>
 
           {/* add to cart part */}
-          <div className="mt-10 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
+          <div className="lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start mt-10">
             <div>
               <div className="mt-10">
                 <AddToCartButton product={product} />
@@ -137,7 +137,7 @@ const page = async ({ params }: Props) => {
                 <div className="group inline-flex text-sm font-medium">
                   <Shield
                     aria-hidden="true"
-                    className="mr-2 h5-w-5 flex-shrink-0 text-gray-400"
+                    className="h5-w-5 flex-shrink-0 mr-2 text-gray-400"
                   />
                   <span className="text-muted-foreground hover:text-gray-700">
                     30 Day Return Guarantee

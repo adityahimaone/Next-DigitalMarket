@@ -14,7 +14,7 @@
     "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png}\" dist/",
     "lint": "next lint"
   },
-"resolutions": {
+  "resolutions": {
     "cliui": "7.0.2"
   },
   "dependencies": {
@@ -52,7 +52,7 @@
     "resend": "^2.1.0",
     "sonner": "^1.2.4",
     "sooner": "^1.1.4",
-    "stripe": "^14.10.0",
+    "stripe": "14.4.0",
     "swiper": "^11.0.5",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",

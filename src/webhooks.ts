@@ -1,11 +1,11 @@
-import { getPayloadClient } from "../get-payload";
-import { WebhookRequest } from "../server";
+import { getPayloadClient } from "./get-payload";
+import { WebhookRequest } from "./server";
 import express from "express";
-import { stripe } from "../lib/stripe";
+import { stripe } from "./lib/stripe";
 import type Stripe from "stripe";
-import { Product } from "../payload-types";
+import { Product } from "./payload-types";
 import { Resend } from "resend";
-import { ReceiptEmailHtml } from "../components/emails/ReceiptEmail";
+import { ReceiptEmailHtml } from "./components/emails/ReceiptEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -52,6 +52,8 @@ export const stripeWebhookHandler = async (
 
     const [user] = users;
 
+    console.log(user, "user");
+
     if (!user) return res.status(404).json({ error: "No such user exists." });
 
     const { docs: orders } = await payload.find({
@@ -68,6 +70,13 @@ export const stripeWebhookHandler = async (
 
     if (!user) return res.status(404).json({ error: "No such order exists." });
 
+    console.log(order?._isPaid, order, "order._isPaid");
+
+    if (order._isPaid) {
+      // Order has already been marked as paid, no need to update again
+      return res.status(200).send();
+    }
+
     await payload.update({
       collection: "orders",
       data: {
@@ -83,7 +92,7 @@ export const stripeWebhookHandler = async (
     // send receipt
     try {
       const data = await resend.emails.send({
-        from: "DigitalHippo <hello@joshtriedcoding.com>",
+        from: "Digital Market <me@adityahimaone.tech>",
         to: [user.email],
         subject: "Thanks for your order! This is your receipt.",
         html: ReceiptEmailHtml({

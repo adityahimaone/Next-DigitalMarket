@@ -7,7 +7,7 @@ import { Access, CollectionConfig } from "payload/types";
 import { Product, User } from "../../payload-types";
 import { stripe } from "../../lib/stripe";
 
-const adduser: BeforeChangeHook<Product> = async ({ req, data }) => {
+const addUser: BeforeChangeHook<Product> = async ({ req, data }) => {
   const user = req.user;
 
   return { ...data, user: user.id };
@@ -44,14 +44,15 @@ const syncUser: AfterChangeHook<Product> = async ({ req, doc }) => {
   }
 };
 
-const isAdminOrHasAcccess =
+const isAdminOrHasAccess =
   (): Access =>
   ({ req: { user: _user } }) => {
     const user = _user as User | undefined;
+
     if (!user) return false;
     if (user.role === "admin") return true;
 
-    const userProductsIDs = (user.products || []).reduce<Array<string>>(
+    const userProductIDs = (user.products || []).reduce<Array<string>>(
       (acc, product) => {
         if (!product) return acc;
         if (typeof product === "string") {
@@ -59,6 +60,7 @@ const isAdminOrHasAcccess =
         } else {
           acc.push(product.id);
         }
+
         return acc;
       },
       []
@@ -66,33 +68,29 @@ const isAdminOrHasAcccess =
 
     return {
       id: {
-        in: userProductsIDs,
+        in: userProductIDs,
       },
     };
   };
+
 export const Products: CollectionConfig = {
   slug: "products",
   admin: {
     useAsTitle: "name",
   },
-  //   who can access this collection in the admin panel
   access: {
-    read: isAdminOrHasAcccess(),
-    update: isAdminOrHasAcccess(),
-    delete: isAdminOrHasAcccess(),
+    read: isAdminOrHasAccess(),
+    update: isAdminOrHasAccess(),
+    delete: isAdminOrHasAccess(),
   },
   hooks: {
-    // The afterChange hook is called after a document is created or updated.
     afterChange: [syncUser],
-    // The beforeChange hook is called before a document is created or updated.
     beforeChange: [
-      adduser,
+      addUser,
       async (args) => {
         if (args.operation === "create") {
           const data = args.data as Product;
 
-          // A new product is created in Stripe using the stripe.products.create method.
-          // The details of the product are provided in the object argument.
           const createdProduct = await stripe.products.create({
             name: data.name,
             default_price_data: {
@@ -101,8 +99,6 @@ export const Products: CollectionConfig = {
             },
           });
 
-          // Starts the definition of a updated constant.
-          // This constant will hold the updated product data.
           const updated: Product = {
             ...data,
             stripeId: createdProduct.id,
@@ -117,6 +113,7 @@ export const Products: CollectionConfig = {
             name: data.name,
             default_price: data.priceId!,
           });
+
           const updated: Product = {
             ...data,
             stripeId: updatedProduct.id,
@@ -128,7 +125,6 @@ export const Products: CollectionConfig = {
       },
     ],
   },
-  // table
   fields: [
     {
       name: "user",
@@ -149,11 +145,13 @@ export const Products: CollectionConfig = {
     {
       name: "description",
       type: "textarea",
-      label: "Product Details",
+      label: "Product details",
     },
     {
       name: "price",
       label: "Price in USD",
+      min: 0,
+      max: 1000,
       type: "number",
       required: true,
     },
@@ -161,8 +159,8 @@ export const Products: CollectionConfig = {
       name: "category",
       label: "Category",
       type: "select",
-      required: true,
       options: PRODUCT_CATEGORIES.map(({ label, value }) => ({ label, value })),
+      required: true,
     },
     {
       name: "product_files",
@@ -174,7 +172,7 @@ export const Products: CollectionConfig = {
     },
     {
       name: "approvedForSale",
-      label: "Product States",
+      label: "Product Status",
       type: "select",
       defaultValue: "pending",
       access: {
@@ -184,7 +182,7 @@ export const Products: CollectionConfig = {
       },
       options: [
         {
-          label: "Pending Verification",
+          label: "Pending verification",
           value: "pending",
         },
         {

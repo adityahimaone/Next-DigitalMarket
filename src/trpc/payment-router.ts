@@ -1,11 +1,10 @@
 import { z } from "zod";
-import { privateProcedure, router } from "./trpc";
+import { privateProcedure, publicProcedure, router } from "./trpc";
 import { TRPCError } from "@trpc/server";
 import { getPayloadClient } from "../get-payload";
 import { stripe } from "../lib/stripe";
 import type Stripe from "stripe";
 
-// Starts the definition of a new router named paymentRouter using the router function exported from src/trpc/trpc.ts.
 export const paymentRouter = router({
   createSession: privateProcedure
     .input(z.object({ productIds: z.array(z.string()) }))
@@ -17,7 +16,6 @@ export const paymentRouter = router({
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
 
-      // access cms client
       const payload = await getPayloadClient();
 
       const { docs: products } = await payload.find({
@@ -29,15 +27,13 @@ export const paymentRouter = router({
         },
       });
 
-      const filteredProducts = products.filter((product) =>
-        Boolean(product.priceId)
-      );
+      const filteredProducts = products.filter((prod) => Boolean(prod.priceId));
 
       const order = await payload.create({
         collection: "orders",
         data: {
           _isPaid: false,
-          products: filteredProducts.map((product) => product.id),
+          products: filteredProducts.map((prod) => prod.id),
           user: user.id,
         },
       });
@@ -46,7 +42,7 @@ export const paymentRouter = router({
 
       filteredProducts.forEach((product) => {
         line_items.push({
-          price: product.priceId as string,
+          price: product.priceId!,
           quantity: 1,
         });
       });
@@ -73,9 +69,7 @@ export const paymentRouter = router({
         });
 
         return { url: stripeSession.url };
-      } catch (error) {
-        console.error(error);
-
+      } catch (err) {
         return { url: null };
       }
     }),
@@ -95,10 +89,13 @@ export const paymentRouter = router({
         },
       });
 
-      if (!orders.length) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!orders.length) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
 
       const [order] = orders;
 
+      // fake oder _isPaid
       return { isPaid: order._isPaid };
     }),
 });
